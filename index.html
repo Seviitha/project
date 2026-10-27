@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskFlow</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect width="24" height="24" rx="7" fill="var(--accent)"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>TaskFlow</span>
+    </div>
+    <nav id="nav" aria-label="Task views">
+      <button data-view="dashboard">Dashboard</button>
+      <button data-view="all">All tasks</button>
+      <button data-view="today">Today</button>
+      <button data-view="upcoming">Upcoming</button>
+      <button data-view="active">Active</button>
+      <button data-view="completed">Completed</button>
+      <button data-view="overdue">Overdue</button>
+    </nav>
+    <h2 class="side-h">Categories</h2>
+    <div id="catNav" class="cat-nav"></div>
+    <div class="side-foot">
+      <button class="ghost" id="demoBtn" hidden>Remove demo tasks</button>
+      <button class="ghost" id="themeBtn" aria-label="Switch theme"><span id="themeLabel">Light theme</span></button>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main>
+    <header class="top">
+      <button class="icon-btn menu" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="hello">
+        <h1 id="greeting">Hello</h1>
+        <p id="today"></p>
+      </div>
+      <input type="search" id="search" placeholder="Search tasks  ( / )" aria-label="Search tasks" autocomplete="off">
+      <button class="primary" id="addBtn">+ New task</button>
+    </header>
+
+    <section class="stats" aria-label="Statistics">
+      <div class="stat"><span id="statTotal">0</span><small>Total</small></div>
+      <div class="stat"><span id="statActive">0</span><small>Active</small></div>
+      <div class="stat"><span id="statDone">0</span><small>Completed</small></div>
+      <div class="stat bad"><span id="statOverdue">0</span><small>Overdue</small></div>
+    </section>
+
+    <section class="progress">
+      <div class="progress-row"><span>Completion</span><strong id="pct">0%</strong></div>
+      <div class="bar" id="bar" role="progressbar" aria-label="Completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="barFill"></i></div>
+    </section>
+
+    <section class="toolbar" aria-label="Filters">
+      <h2 id="viewTitle">Dashboard</h2>
+      <label>Priority
+        <select id="filterPriority"><option value="all">All</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+      </label>
+      <label>Category <select id="filterCategory"><option value="all">All</option></select></label>
+      <label>Sort by
+        <select id="sortBy"><option value="created">Newest</option><option value="due">Due date</option><option value="priority">Priority</option><option value="alpha">A–Z</option></select>
+      </label>
+      <button class="ghost" id="clearFilters">Clear filters</button>
+      <button class="ghost danger" id="clearCompleted">Clear completed</button>
+    </section>
+
+    <p class="count" id="resultCount" aria-live="polite"></p>
+    <ul class="tasks" id="taskList"></ul>
+
+    <div class="empty" id="empty" hidden>
+      <div class="empty-art" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h3 id="emptyTitle"></h3>
+      <p id="emptyText"></p>
+      <button class="primary" id="emptyAdd">+ New task</button>
+    </div>
+  </main>
+</div>
+
+<dialog id="taskDialog" aria-labelledby="dialogTitle">
+  <form id="taskForm" novalidate>
+    <h2 id="dialogTitle">New task</h2>
+    <input type="hidden" id="tId">
+    <label for="tTitle">Title</label>
+    <input id="tTitle" maxlength="120" required aria-describedby="titleError" autocomplete="off">
+    <p class="err" id="titleError" role="alert"></p>
+    <label for="tDesc">Description <small>(optional)</small></label>
+    <textarea id="tDesc" rows="3" maxlength="500"></textarea>
+    <div class="grid2">
+      <div><label for="tPriority">Priority</label>
+        <select id="tPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+      <div><label for="tDue">Due date <small>(optional)</small></label><input type="date" id="tDue"></div>
+    </div>
+    <label for="tCategory">Category</label>
+    <input id="tCategory" list="catList" maxlength="30" placeholder="e.g. Study, Personal" autocomplete="off">
+    <datalist id="catList"></datalist>
+    <div class="actions">
+      <button type="button" class="ghost" id="cancelBtn">Cancel</button>
+      <button type="submit" class="primary" id="saveBtn">Save task</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDialog" aria-labelledby="confirmTitle">
+  <form method="dialog">
+    <h2 id="confirmTitle"></h2>
+    <p id="confirmMsg"></p>
+    <div class="actions">
+      <button value="cancel" class="ghost">Cancel</button>
+      <button value="ok" class="primary danger-fill" id="confirmOk">Delete</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
